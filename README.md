@@ -16,3 +16,8 @@
     3. use state hook
     4. user effect hook
     5. use reducer hook
+
+ # Create Product and Rating Component
+    1. create Rating component
+    2. Create Product component
+    3. User Rating component in Product component

@@ -1,9 +1,13 @@
-import { useEffect, useReducer, useState } from 'react';
-import { Link } from 'react-router-dom';
+
+import Row from 'react-bootstrap/Row'
+import Col from 'react-bootstrap/Col'
+import Product from '../components/Product';
 import axios from 'axios';
-import logger from 'use-reducer-logger';
+import { useEffect, useReducer } from 'react';
+import { Helmet } from "react-helmet-async";
 
 const reducer = (state,action)=>{
+  console.log("state 상태확인", state);
   switch(action.type){
     case 'FETCH_REQUEST':
       return{...state, loading:true};
@@ -17,50 +21,44 @@ const reducer = (state,action)=>{
  
 }
 
+
 function HomeScreen() {
   const[{loading,error, products}, dispatch]= useReducer(reducer,{products:[],loading:true, error:''})
-  //const [products, setProducts] = useState([]);
-
-  const fetchData = async () => {
-    dispatch({type:'FETCH_REQUEST'});
-    try{
-      const result= await axios.get('/api/products');
-      console.log("result",result);
-      dispatch({type:'FETCH_SUCCESS',payload:result.data.products})
-    }
-    catch(err){
-      dispatch({type:'FETCH_FAIL',payload:err.message})
-    }
-   
-  }
-  useEffect(() => {
-    
-    fetchData();
-  }, []);
   
+useEffect(() => {
+  const fetchData = async () => {
+      dispatch({type:'FETCH_REQUEST'});
+      try{
+        const result= await axios.get(`/api/products`);
+        console.log("result",result);
+        dispatch({type:'FETCH_SUCCESS',payload:result.data.products})
+      }
+      catch(err){
+        dispatch({type:'FETCH_FAIL',payload:err.message})
+      }
+     
+    }
+fetchData();
+}, []);
   return (
     <div>
+      <Helmet>
+        <title>Amazona</title>
+      </Helmet>
       <h1>Featured Products</h1>
       <div className="products">
       
         {loading? (<div>Loading....</div>) : error ?(<div>{error}</div>) :(
-
+        <Row>
+          {  
         products.map((product) => (
-          <div className="product" key={product.slug}>
-            <Link to={`/product/${product.slug}`}>
-              <img src={product.image} alt={product.name} />
-            </Link>
-            <div className="product-info">
-              <Link to={`/product/${product.slug}`}>
-                <p>{product.name}</p>
-              </Link>
-              <p>
-                <strong>${product.price}</strong>
-              </p>
-              <button>Add to cart</button>
-            </div>
-          </div>
-        )))}
+          <Col  key={product.slug} sm={6} md={4} lg={3} className="mb-3">
+         <Product product={product}></Product>
+          </Col>
+        ))}
+      
+        </Row>
+        )}
       </div>
     </div>
   );
