@@ -21,3 +21,15 @@
     1. create Rating component
     2. Create Product component
     3. User Rating component in Product component
+
+# Create Loading and Message Component
+    1. create loading component
+    2. use spinner component
+    3. create message component
+    4. create utils.js to define getError function
+
+# Implement Add To Cart
+    1. Create React Context
+    2. define reducer
+    3. create store provider
+    4. implement add to cart button click handler

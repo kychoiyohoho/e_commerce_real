@@ -5,6 +5,8 @@ import Product from '../components/Product';
 import axios from 'axios';
 import { useEffect, useReducer } from 'react';
 import { Helmet } from "react-helmet-async";
+import LoadingBox from '../components/LoadingBox';
+import MessageBox from '../components/MessageBox';
 
 const reducer = (state,action)=>{
   console.log("state 상태확인", state);
@@ -48,7 +50,7 @@ fetchData();
       <h1>Featured Products</h1>
       <div className="products">
       
-        {loading? (<div>Loading....</div>) : error ?(<div>{error}</div>) :(
+        {loading? (<LoadingBox />) : error ?(<MessageBox variant="danger">{error}</MessageBox>) :(
         <Row>
           {  
         products.map((product) => (
