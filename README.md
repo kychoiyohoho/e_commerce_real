@@ -37,3 +37,11 @@
     1. create 2 columns
     2. display item list
     3. create action column
+# create Cart Screen
+    1. create 2 columns
+    2. display items list
+    3. create action column
+    4. Complete Cart Screen
+    5. click handler for inc/dec item
+    6. click handler for remove item
+    7. click handler for checkout
