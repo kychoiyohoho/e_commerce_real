@@ -33,3 +33,7 @@
     2. define reducer
     3. create store provider
     4. implement add to cart button click handler
+# Create Cart Screen
+    1. create 2 columns
+    2. display item list
+    3. create action column

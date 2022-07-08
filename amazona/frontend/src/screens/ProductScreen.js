@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useContext, useEffect, useReducer, useState } from 'react';
 import axios from 'axios';
 import Row from 'react-bootstrap/Row'
@@ -29,6 +29,7 @@ const reducer = (state,action)=>{
   }
 
 function ProductScreen(){
+const navigate = useNavigate();
 const params = useParams();
 const {slug} = params;
 const[{loading,error, product}, dispatch]= useReducer(reducer,{product:[],loading:true, error:''})
@@ -40,7 +41,6 @@ useEffect(() => {
         dispatch({type:'FETCH_REQUEST'});
         try{
           const result= await axios.get(`/api/products/slug/${slug}`);
-          console.log("result",result);
           dispatch({type:'FETCH_SUCCESS',payload:result.data})
         }
         catch(err){
@@ -53,13 +53,25 @@ useEffect(() => {
 
 //dispatch를 여기서 정해둠, ctxDipatch라는 이름으로
 const{state, dispatch:ctxDispatch} = useContext(Store);
+//중괄호 -> cart 라는 키 값에 이미 접근해서 콘솔에는 {cartItems} 부터 시작
+//중괄호 하지 않는다면 {cart} 부터 시작
+const  {cart} = state;
 
-const addToCartHandler = ()=>{
-  
+console.log("state",cart);//처음에는 state에 값이 없는데, 같은 이름으로 몇개씩 담긴다 -> 이걸 배열의 길이를 늘리는데 이러지말고 id 가 같으면 quantity 를 늘리는 방향으로 가자
+
+const addToCartHandler = async()=>{
+   const existItem = cart.cartItems.find((x)=>x._id === product._id);
+   const quantity = existItem ? existItem.quantity + 1:1;
+   const {data} = await axios.get(`/api/products/${product._id}`);
+   if(data.countInStock < quantity){
+    window.alert('Sorry Product is out of stock');
+    return;
+   }
     ctxDispatch({
         type:'CART_ADD_ITEM',
-        payload:{...product,quantity:1}
-    })
+        payload:{...product,quantity}
+    });
+    navigate('/cart');
 }
 
 
